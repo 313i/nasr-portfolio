@@ -1,41 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="notranslate">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nasr | Premium Secured Portfolio</title>
+  <meta name="google" content="notranslate"> <title>Nasr | Premium Secured Portfolio</title>
   <style>
     :root {
       --gold: #ffd700;
       --gold-dark: #b8860b;
-      --gold-glitch: rgba(255, 215, 0, 0.2);
+      --gold-glitch: rgba(255, 215, 0, 0.1);
       --bg-dark: #02050a;
     }
 
-    * { box-sizing: border-box; }
+    /* حماية إضافية: منع تحديد النصوص في كامل الموقع */
+    * { 
+      box-sizing: border-box; 
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
 
     body {
       margin: 0; padding: 0;
       font-family: 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-dark);
       color: white;
-      overflow: hidden; /* منع التمرير أثناء التحميل */
+      overflow: hidden;
     }
 
-    /* --- شاشة التحميل (الستارة الخارجية) --- */
+    /* حماية من الطباعة (حفظ كـ PDF) */
+    @media print {
+      body { display: none !important; }
+    }
+
+    /* --- شاشة التحميل --- */
     #loader {
       position: fixed; inset: 0;
       background: #000;
       display: flex; align-items: center; justify-content: center;
       z-index: 10000;
-      transition: transform 1.2s cubic-bezier(1, 0, 0, 1); /* تأثير مسح الغلاف */
+      transition: transform 1.2s cubic-bezier(1, 0, 0, 1);
       perspective: 1000px;
     }
 
     .welcome-container {
       position: relative;
       display: flex; align-items: center; justify-content: center;
-      transition: opacity 1s ease-out; /* تأثير مسح كلمة Welcome */
+      transition: opacity 1s ease-out;
     }
 
     .welcome-text {
@@ -45,15 +57,8 @@
       font-weight: 300;
       text-transform: uppercase;
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-      animation: fadeInWelcome 0.8s ease-in forwards;
     }
 
-    @keyframes fadeInWelcome {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* --- أنيميشن دوران NASR المطور (يمين -> يسار -> 3D) --- */
     .nasr-orbit {
       position: absolute;
       font-weight: 900;
@@ -61,9 +66,9 @@
       color: var(--gold);
       text-shadow: 0 0 25px var(--gold);
       white-space: nowrap;
-      opacity: 0; /* مخفي في البداية */
-      animation: enterFromRight 1s ease-out 0.8s forwards, /* دخول من اليمين */
-                 orbit3D_V2 3s ease-in-out infinite 1.8s; /* دوران مستمر */
+      opacity: 0;
+      animation: enterFromRight 1s ease-out 0.8s forwards, 
+                 orbit3D_V2 3s ease-in-out infinite 1.8s;
     }
 
     @keyframes enterFromRight {
@@ -78,23 +83,13 @@
       100% { transform: rotateY(360deg) translateX(160px) rotateY(-360deg) scale(1); opacity: 1; z-index: 10; }
     }
 
-    /* --- واجهة الموقع الرئيسية --- */
+    /* --- الواجهة الرئيسية --- */
     .main-content {
       min-height: 100vh;
       display: flex; align-items: center; justify-content: center;
       visibility: hidden;
       background: radial-gradient(circle at center, #0a0d14 0%, #02050a 100%);
-    }
-
-    .glow-line {
-      position: absolute; width: 1px; height: 100vh;
-      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
-      opacity: 0.1; animation: scan 6s linear infinite;
-    }
-
-    @keyframes scan {
-      0% { transform: translateY(-100%); }
-      100% { transform: translateY(100%); }
+      transition: filter 0.5s ease; /* للتغبيش عند محاولة التصوير */
     }
 
     .glass-card {
@@ -110,41 +105,13 @@
       transform: scale(0.9);
       opacity: 0;
       transition: 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-      overflow: hidden; /* مهم لتأثير المسح glitch */
     }
-
-    /* تأثير وميض المسح الـ Glitch على الكارت */
-    .glass-card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, transparent, var(--gold-glitch), transparent);
-      transform: translateY(-100%);
-      animation: glitchScan 4s linear infinite;
-      z-index: 0;
-    }
-
-    @keyframes glitchScan {
-      0% { transform: translateY(-100%); opacity: 0.1; }
-      10% { transform: translateY(0); opacity: 0.5; }
-      20% { transform: translateY(100%); opacity: 0.1; }
-      100% { transform: translateY(100%); opacity: 0; }
-    }
-
-    .content-wrapper { position: relative; z-index: 1; } /* محتوى الكارت فوق تأثير المسح */
 
     h1 {
       font-size: 4.2rem; margin: 0;
       background: linear-gradient(to bottom, #fff, var(--gold));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       letter-spacing: 12px; text-transform: uppercase;
-      filter: drop-shadow(0 0 10px rgba(255,215,0,0.2));
-      animation: textGlow 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes textGlow {
-      from { text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
-      to { text-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
     }
 
     .arabic-name {
@@ -153,22 +120,7 @@
     }
 
     .service-row { margin-bottom: 25px; text-align: right; direction: rtl; }
-    
-    /* الوميض الـ Glitch على الكلمات الإنكليزية */
-    .en-tag { 
-      position: relative;
-      color: var(--gold); font-size: 0.75rem; font-weight: 800; display: block; 
-      letter-spacing: 1.5px;
-      animation: wordGlitch 3s steps(1) infinite;
-    }
-
-    @keyframes wordGlitch {
-      0%, 100% { transform: translate(0, 0) scale(1); text-shadow: none; opacity: 1;}
-      90% { transform: translate(1px, -1px) scale(1.02); text-shadow: -1px 1px var(--gold-glitch); opacity: 0.9;}
-      91% { transform: translate(-1px, 1px) scale(0.98); text-shadow: 1px -1px var(--gold-glitch); opacity: 1;}
-      92% { transform: translate(0, 0) scale(1); text-shadow: none; opacity: 0.8;}
-    }
-
+    .en-tag { color: var(--gold); font-size: 0.75rem; font-weight: 800; display: block; letter-spacing: 1.5px; }
     .ar-desc { color: #aaa; font-size: 0.95rem; border-right: 3px solid var(--gold); padding-right: 12px; display: block; margin-top: 5px; }
 
     .btn-gold {
@@ -176,28 +128,20 @@
       background: linear-gradient(45deg, var(--gold-dark), var(--gold));
       color: #000; text-decoration: none; font-weight: 900;
       border-radius: 18px; margin-top: 30px;
-      transition: 0.4s; text-transform: uppercase; letter-spacing: 1px;
+      transition: 0.4s; text-transform: uppercase;
     }
 
-    .btn-gold:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 30px rgba(218, 165, 32, 0.4); }
+    .btn-gold:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(218, 165, 32, 0.4); }
 
-    .insta-link { color: #888; text-decoration: none; font-size: 0.85rem; display: block; margin-top: 20px; transition: 0.3s; }
-    .insta-link:hover { color: var(--gold); text-shadow: 0 0 5px var(--gold); }
+    .insta-link { color: #888; text-decoration: none; font-size: 0.85rem; display: block; margin-top: 20px; }
 
   </style>
 </head>
-<body>
-
-  <div id="loader">
+<body oncontextmenu="return false;"> <div id="loader">
     <div class="welcome-container" id="welcomeContainer">
       <div class="welcome-text">Welcome to the page</div>
       <div class="nasr-orbit">NASR</div>
     </div>
-  </div>
-
-  <div class="bg-lines">
-    <div class="glow-line" style="left: 25%;"></div>
-    <div class="glow-line" style="left: 75%;"></div>
   </div>
 
   <div class="main-content" id="mainSite">
@@ -229,32 +173,45 @@
   </div>
 
   <script>
+    // 1. حماية ضد أدوات المطورين واختصارات التصوير
+    document.onkeydown = function(e) {
+      if (e.keyCode == 123) return false; // F12
+      if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+      if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+      if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+      if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // View Source
+    };
+
+    // 2. تغبيش الشاشة عند محاولة أخذ سكرين شوت (عند فقدان التركيز)
+    window.onblur = function() {
+      document.getElementById('mainSite').style.filter = "blur(25px)";
+    };
+    window.onfocus = function() {
+      document.getElementById('mainSite').style.filter = "blur(0px)";
+    };
+
+    // 3. منطق التحميل والانتقال
     window.onload = () => {
-      // إجمالي وقت التحميل (4 ثوانٍ تقريباً ليشمل حركات الدخول)
       setTimeout(() => {
         const loader = document.getElementById("loader");
         const welcomeContainer = document.getElementById("welcomeContainer");
         const mainSite = document.getElementById("mainSite");
         const card = document.getElementById("card");
 
-        // 1. مسح كلمة Welcome والنصوص تدريجياً (تأثير المسح التدرجي)
         welcomeContainer.style.opacity = "0";
         
-        // 2. انتظر حتى يكتمل المسح، ثم امسح الغلاف الأسود بالكامل للأعلى
         setTimeout(() => {
           loader.style.transform = "translateY(-100%)";
-          
-          // 3. إظهار الموقع الحقيقي بحركة دخول فخمة
           mainSite.style.visibility = "visible";
           
           setTimeout(() => {
             card.style.opacity = "1";
             card.style.transform = "scale(1)";
-            document.body.style.overflow = "auto"; // السماح بالسكرول بعد الفتح
+            document.body.style.overflow = "auto";
           }, 800);
-        }, 1000); // انتظر ثانية واحدة بعد بدء مسح الكلمات لنسحب الغلاف
+        }, 1000);
       }, 4000); 
-    }
+    };
   </script>
 </body>
 </html>
