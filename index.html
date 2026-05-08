@@ -1,162 +1,170 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نصر | Nasr</title>  <style>
-    body{
-      margin:0;
-      font-family:Arial;
-      background:linear-gradient(135deg,#0f172a,#1e293b);
-      color:white;
-      text-align:center;
+  <title>Nasr | Portfolio</title>
+  <style>
+    :root {
+      --primary: #00d2ff;
+      --secondary: #3a7bd5;
+      --bg-dark: #050a14;
     }
 
-    /* شاشة تحميل */
-    #loader{
-      position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background:#0f172a;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
-      flex-direction:column;
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-dark);
+      color: white;
+      text-align: center;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100vh;
     }
 
-    .spinner{
-      width:60px;
-      height:60px;
-      border:5px solid #334155;
-      border-top:5px solid #38bdf8;
-      border-radius:50%;
-      animation:spin 1s linear infinite;
+    /* تأثير الخطوط الوميضية المتحركة في الخلفية */
+    .bg-lines {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #0a192f 0%, #050a14 100%);
     }
 
-    @keyframes spin{
-      0%{transform:rotate(0deg)}
-      100%{transform:rotate(360deg)}
+    .line {
+      position: absolute;
+      width: 2px;
+      height: 100vh;
+      background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+      opacity: 0;
+      animation: scan linear infinite;
     }
 
-    nav{
-      position:sticky;
-      top:0;
-      background:rgba(0,0,0,0.3);
-      backdrop-filter:blur(10px);
-      padding:12px;
-      display:flex;
-      justify-content:center;
-      gap:20px;
-      z-index:100;
+    @keyframes scan {
+      0% { transform: translateY(-100%); opacity: 0; }
+      50% { opacity: 0.5; }
+      100% { transform: translateY(100%); opacity: 0; }
     }
 
-    nav a{
-      color:white;
-      text-decoration:none;
-      font-weight:bold;
+    .line:nth-child(1) { left: 15%; animation-duration: 3s; background: #00d2ff; }
+    .line:nth-child(2) { left: 35%; animation-duration: 5s; animation-delay: 1s; background: #ff007a; }
+    .line:nth-child(3) { left: 55%; animation-duration: 4s; animation-delay: 2s; background: #00ff88; }
+    .line:nth-child(4) { left: 75%; animation-duration: 6s; animation-delay: 0.5s; background: #7000ff; }
+    .line:nth-child(5) { left: 95%; animation-duration: 3.5s; animation-delay: 1.5s; background: #ffee00; }
+
+    /* شاشة التحميل */
+    #loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--bg-dark);
+      display: flex;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: 0.8s;
     }
 
-    .box{
-      padding:60px 20px;
-      animation:fadeIn 1s ease-in;
+    .spinner {
+      width: 50px; height: 50px;
+      border: 3px solid rgba(0, 210, 255, 0.1);
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
 
-    .card{
-      background:rgba(255,255,255,0.07);
-      border:1px solid rgba(255,255,255,0.12);
-      padding:20px;
-      margin:20px auto;
-      border-radius:18px;
-      max-width:420px;
-      backdrop-filter:blur(12px);
-      box-shadow:0 8px 25px rgba(0,0,0,0.3);
-      transition:0.3s;
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    .container { padding: 40px 20px; max-width: 500px; margin: auto; }
+
+    h1 {
+      font-size: 4.5rem;
+      margin: 0;
+      letter-spacing: 10px;
+      text-transform: uppercase;
+      background: linear-gradient(to bottom, #fff, #666);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
     }
 
-    .card:hover{
-      transform:scale(1.03);
+    .subtitle {
+      color: var(--primary);
+      font-weight: bold;
+      margin-bottom: 40px;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
     }
 
-    /* صورة شخصية احترافية مطوّرة */
-    .profile-img{
-      width:160px;
-      height:160px;
-      border-radius:50%;
-      object-fit:cover;
-      border:4px solid transparent;
-      background:linear-gradient(135deg,#38bdf8,#0ea5e9);
-      padding:4px;
-      margin:auto;
-      display:block;
-      transition:0.4s;
-      box-shadow:0 15px 35px rgba(0,0,0,0.5);
-      animation:float 3s ease-in-out infinite;
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 25px;
+      backdrop-filter: blur(8px);
+      text-align: left;
     }
 
-    .profile-img:hover{
-      transform:scale(1.15);
-      box-shadow:0 20px 45px rgba(56,189,248,0.4);
+    .card h3 { color: var(--primary); margin-top: 0; margin-bottom: 15px; font-size: 1.2rem; }
+    .card p { margin: 8px 0; font-size: 0.95rem; color: #cbd5e1; }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background: var(--primary);
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 12px;
+      transition: 0.3s;
+      box-shadow: 0 8px 20px rgba(0, 210, 255, 0.2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    @keyframes float{
-      0%{transform:translateY(0px)}
-      50%{transform:translateY(-8px)}
-      100%{transform:translateY(0px)}
-    }
+    .btn:hover { background: #fff; transform: translateY(-3px); box-shadow: 0 12px 25px rgba(0, 210, 255, 0.4); }
 
-    h1{
-      margin:15px 0;
-      font-size:42px;
-    }
+    .footer { margin-top: 40px; font-size: 0.65rem; color: #444; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
 
-    .btn{
-      display:inline-block;
-      margin-top:10px;
-      padding:10px 20px;
-      background:#38bdf8;
-      color:#0f172a;
-      border-radius:20px;
-      text-decoration:none;
-      font-weight:bold;
-      transition:0.3s;
-    }
+  <div id="loader"><div class="spinner"></div></div>
 
-    .btn:hover{
-      transform:scale(1.08);
-      background:#0ea5e9;
-    }
+  <div class="bg-lines">
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+  </div>
 
-    @keyframes fadeIn{
-      from{opacity:0; transform:translateY(-20px);}
-      to{opacity:1; transform:translateY(0);}
+  <div class="container">
+    <h1>Nasr</h1>
+    <div class="subtitle">PYTHON DEVELOPER • CYBER SECURITY EXPERT</div>
+
+    <div class="card">
+      <h3>Expertise</h3>
+      <p>• Python Automation & Advanced Bots</p>
+      <p>• Social Media Security (Insta, FB, X, TikTok)</p>
+      <p>• Advanced Cyber Protection Solutions</p>
+    </div>
+
+    <a href="https://t.me/nasrout" class="btn" target="_blank">Message Me on Telegram</a>
+
+    <div class="footer">SECURED SYSTEM BY NASR © 2026</div>
+  </div>
+
+  <script>
+    window.onload = () => {
+      document.getElementById("loader").style.opacity = "0";
+      setTimeout(() => { document.getElementById("loader").style.display = "none"; }, 800);
     }
-  </style></head><body><!-- شاشة تحميل --><div id="loader">
-  <div class="spinner"></div>
-  <p>جاري التحميل...</p>
-</div><nav>
-  <a href="#home">الرئيسية</a>
-  <a href="#about">عنّي</a>
-  <a href="#projects">مشاريعي</a>
-  <a href="#contact">تواصل</a>
-</nav><div class="box" id="home">  <!-- 🔴 ضع رابط صورتك هنا بعد رفعها على GitHub -->  <img class="profile-img" src="https://via.placeholder.com/150" alt="صورة شخصية">  <h1>نصر | Nasr</h1>
-  <p>مطور برمجيات 💻 | Software Developer</p>  <div class="card" id="about">
-    <p>
-      I build modern websites and user interfaces.<br>
-      أبني مواقع وواجهات حديثة باستخدام تقنيات الويب.
-    </p>
-  </div>  <div class="card" id="projects">
-    <h3>مشاريعي | Projects</h3>
-    <p>🌐 موقع تعريفي</p>
-    <p>📱 واجهات ويب حديثة</p>
-    <p>⚙️ مشاريع JavaScript</p>
-  </div>  <div class="card" id="contact">
-    <p>📱 حسابي: @nasrout</p>
-    <a class="btn" href="https://t.me/nasrout" target="_blank">تليگرام</a>
-  </div></div><script>
-  window.onload = function(){
-    document.getElementById("loader").style.display = "none";
-  }
-</script></body>
-  </html>
+  </script>
+</body>
+</html>
