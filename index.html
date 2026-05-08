@@ -1,169 +1,259 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nasr | Portfolio</title>
+  <title>Nasr | Premium Secured Portfolio</title>
   <style>
     :root {
-      --primary: #00d2ff;
-      --secondary: #3a7bd5;
-      --bg-dark: #050a14;
+      --gold: #ffd700;
+      --gold-dark: #b8860b;
+      --gold-glitch: rgba(255, 215, 0, 0.2);
+      --bg-dark: #02050a;
     }
 
+    * { box-sizing: border-box; }
+
     body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       font-family: 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-dark);
       color: white;
-      text-align: center;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: 100vh;
+      overflow: hidden; /* منع التمرير أثناء التحميل */
     }
 
-    /* تأثير الخطوط الوميضية المتحركة في الخلفية */
-    .bg-lines {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: -1;
-      overflow: hidden;
-      background: radial-gradient(circle at center, #0a192f 0%, #050a14 100%);
+    /* --- شاشة التحميل (الستارة الخارجية) --- */
+    #loader {
+      position: fixed; inset: 0;
+      background: #000;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10000;
+      transition: transform 1.2s cubic-bezier(1, 0, 0, 1); /* تأثير مسح الغلاف */
+      perspective: 1000px;
     }
 
-    .line {
+    .welcome-container {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 1s ease-out; /* تأثير مسح كلمة Welcome */
+    }
+
+    .welcome-text {
+      color: var(--gold);
+      font-size: 1.5rem;
+      letter-spacing: 5px;
+      font-weight: 300;
+      text-transform: uppercase;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      animation: fadeInWelcome 0.8s ease-in forwards;
+    }
+
+    @keyframes fadeInWelcome {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- أنيميشن دوران NASR المطور (يمين -> يسار -> 3D) --- */
+    .nasr-orbit {
       position: absolute;
-      width: 2px;
-      height: 100vh;
-      background: linear-gradient(to bottom, transparent, var(--primary), transparent);
-      opacity: 0;
-      animation: scan linear infinite;
+      font-weight: 900;
+      font-size: 1.9rem;
+      color: var(--gold);
+      text-shadow: 0 0 25px var(--gold);
+      white-space: nowrap;
+      opacity: 0; /* مخفي في البداية */
+      animation: enterFromRight 1s ease-out 0.8s forwards, /* دخول من اليمين */
+                 orbit3D_V2 3s ease-in-out infinite 1.8s; /* دوران مستمر */
+    }
+
+    @keyframes enterFromRight {
+      0% { opacity: 0; transform: translateX(300px) rotateY(0deg); }
+      60% { opacity: 1; transform: translateX(-50px) rotateY(-10deg); }
+      100% { opacity: 1; transform: translateX(160px) rotateY(0deg); }
+    }
+
+    @keyframes orbit3D_V2 {
+      0% { transform: rotateY(0deg) translateX(160px) rotateY(0deg) scale(1); opacity: 1; z-index: 10; }
+      50% { transform: rotateY(180deg) translateX(160px) rotateY(-180deg) scale(0.4); opacity: 0.2; filter: blur(3px); z-index: 1; }
+      100% { transform: rotateY(360deg) translateX(160px) rotateY(-360deg) scale(1); opacity: 1; z-index: 10; }
+    }
+
+    /* --- واجهة الموقع الرئيسية --- */
+    .main-content {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      visibility: hidden;
+      background: radial-gradient(circle at center, #0a0d14 0%, #02050a 100%);
+    }
+
+    .glow-line {
+      position: absolute; width: 1px; height: 100vh;
+      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+      opacity: 0.1; animation: scan 6s linear infinite;
     }
 
     @keyframes scan {
-      0% { transform: translateY(-100%); opacity: 0; }
-      50% { opacity: 0.5; }
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100%); }
+    }
+
+    .glass-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 215, 0, 0.15);
+      backdrop-filter: blur(20px);
+      border-radius: 40px;
+      padding: 60px 40px;
+      width: 90%; max-width: 440px;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+      transform: scale(0.9);
+      opacity: 0;
+      transition: 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden; /* مهم لتأثير المسح glitch */
+    }
+
+    /* تأثير وميض المسح الـ Glitch على الكارت */
+    .glass-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent, var(--gold-glitch), transparent);
+      transform: translateY(-100%);
+      animation: glitchScan 4s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes glitchScan {
+      0% { transform: translateY(-100%); opacity: 0.1; }
+      10% { transform: translateY(0); opacity: 0.5; }
+      20% { transform: translateY(100%); opacity: 0.1; }
       100% { transform: translateY(100%); opacity: 0; }
     }
 
-    .line:nth-child(1) { left: 15%; animation-duration: 3s; background: #00d2ff; }
-    .line:nth-child(2) { left: 35%; animation-duration: 5s; animation-delay: 1s; background: #ff007a; }
-    .line:nth-child(3) { left: 55%; animation-duration: 4s; animation-delay: 2s; background: #00ff88; }
-    .line:nth-child(4) { left: 75%; animation-duration: 6s; animation-delay: 0.5s; background: #7000ff; }
-    .line:nth-child(5) { left: 95%; animation-duration: 3.5s; animation-delay: 1.5s; background: #ffee00; }
-
-    /* شاشة التحميل */
-    #loader {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: var(--bg-dark);
-      display: flex;
-      align-items: center; justify-content: center;
-      z-index: 9999;
-      transition: 0.8s;
-    }
-
-    .spinner {
-      width: 50px; height: 50px;
-      border: 3px solid rgba(0, 210, 255, 0.1);
-      border-top: 3px solid var(--primary);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-
-    .container { padding: 40px 20px; max-width: 500px; margin: auto; }
+    .content-wrapper { position: relative; z-index: 1; } /* محتوى الكارت فوق تأثير المسح */
 
     h1 {
-      font-size: 4.5rem;
-      margin: 0;
-      letter-spacing: 10px;
-      text-transform: uppercase;
-      background: linear-gradient(to bottom, #fff, #666);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
+      font-size: 4.2rem; margin: 0;
+      background: linear-gradient(to bottom, #fff, var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: 12px; text-transform: uppercase;
+      filter: drop-shadow(0 0 10px rgba(255,215,0,0.2));
+      animation: textGlow 2s ease-in-out infinite alternate;
     }
 
-    .subtitle {
-      color: var(--primary);
-      font-weight: bold;
-      margin-bottom: 40px;
-      font-size: 0.85rem;
-      letter-spacing: 2px;
+    @keyframes textGlow {
+      from { text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+      to { text-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
     }
 
-    .card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 30px;
-      margin-bottom: 25px;
-      backdrop-filter: blur(8px);
-      text-align: left;
+    .arabic-name {
+      font-size: 1.3rem; color: #666;
+      letter-spacing: 10px; margin-top: -10px; margin-bottom: 40px;
     }
 
-    .card h3 { color: var(--primary); margin-top: 0; margin-bottom: 15px; font-size: 1.2rem; }
-    .card p { margin: 8px 0; font-size: 0.95rem; color: #cbd5e1; }
-
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      background: var(--primary);
-      color: #000;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 12px;
-      transition: 0.3s;
-      box-shadow: 0 8px 20px rgba(0, 210, 255, 0.2);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .service-row { margin-bottom: 25px; text-align: right; direction: rtl; }
+    
+    /* الوميض الـ Glitch على الكلمات الإنكليزية */
+    .en-tag { 
+      position: relative;
+      color: var(--gold); font-size: 0.75rem; font-weight: 800; display: block; 
+      letter-spacing: 1.5px;
+      animation: wordGlitch 3s steps(1) infinite;
     }
 
-    .btn:hover { background: #fff; transform: translateY(-3px); box-shadow: 0 12px 25px rgba(0, 210, 255, 0.4); }
+    @keyframes wordGlitch {
+      0%, 100% { transform: translate(0, 0) scale(1); text-shadow: none; opacity: 1;}
+      90% { transform: translate(1px, -1px) scale(1.02); text-shadow: -1px 1px var(--gold-glitch); opacity: 0.9;}
+      91% { transform: translate(-1px, 1px) scale(0.98); text-shadow: 1px -1px var(--gold-glitch); opacity: 1;}
+      92% { transform: translate(0, 0) scale(1); text-shadow: none; opacity: 0.8;}
+    }
 
-    .footer { margin-top: 40px; font-size: 0.65rem; color: #444; letter-spacing: 1px; }
+    .ar-desc { color: #aaa; font-size: 0.95rem; border-right: 3px solid var(--gold); padding-right: 12px; display: block; margin-top: 5px; }
+
+    .btn-gold {
+      display: block; width: 100%; padding: 20px;
+      background: linear-gradient(45deg, var(--gold-dark), var(--gold));
+      color: #000; text-decoration: none; font-weight: 900;
+      border-radius: 18px; margin-top: 30px;
+      transition: 0.4s; text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    .btn-gold:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 30px rgba(218, 165, 32, 0.4); }
+
+    .insta-link { color: #888; text-decoration: none; font-size: 0.85rem; display: block; margin-top: 20px; transition: 0.3s; }
+    .insta-link:hover { color: var(--gold); text-shadow: 0 0 5px var(--gold); }
+
   </style>
 </head>
 <body>
 
-  <div id="loader"><div class="spinner"></div></div>
-
-  <div class="bg-lines">
-    <div class="line"></div>
-    <div class="line"></div>
-    <div class="line"></div>
-    <div class="line"></div>
-    <div class="line"></div>
+  <div id="loader">
+    <div class="welcome-container" id="welcomeContainer">
+      <div class="welcome-text">Welcome to the page</div>
+      <div class="nasr-orbit">NASR</div>
+    </div>
   </div>
 
-  <div class="container">
-    <h1>Nasr</h1>
-    <div class="subtitle">PYTHON DEVELOPER • CYBER SECURITY EXPERT</div>
+  <div class="bg-lines">
+    <div class="glow-line" style="left: 25%;"></div>
+    <div class="glow-line" style="left: 75%;"></div>
+  </div>
 
-    <div class="card">
-      <h3>Expertise</h3>
-      <p>• Python Automation & Advanced Bots</p>
-      <p>• Social Media Security (Insta, FB, X, TikTok)</p>
-      <p>• Advanced Cyber Protection Solutions</p>
+  <div class="main-content" id="mainSite">
+    <div class="glass-card" id="card">
+      <div class="content-wrapper">
+        <h1>Nasr</h1>
+        <div class="arabic-name">نـصـر</div>
+
+        <div class="service-row">
+          <span class="en-tag">PYTHON AUTOMATION</span>
+          <span class="ar-desc">أتمتة العمليات البرمجية وبناء الأنظمة الذكية</span>
+        </div>
+
+        <div class="service-row">
+          <span class="en-tag">CYBER SECURITY</span>
+          <span class="ar-desc">تأمين الحسابات والحماية الرقمية المتقدمة</span>
+        </div>
+
+        <div class="social-links">
+          <a href="https://t.me/nasrout" class="btn-gold">Connect Telegram</a>
+          <a href="https://instagram.com/Pr.nasr" class="insta-link" target="_blank">Instagram: @Pr.nasr</a>
+        </div>
+        
+        <div style="margin-top: 40px; font-size: 0.6rem; color: #333; letter-spacing: 4px;">
+          SECURED BY NASR • 2026
+        </div>
+      </div>
     </div>
-
-    <a href="https://t.me/nasrout" class="btn" target="_blank">Message Me on Telegram</a>
-
-    <div class="footer">SECURED SYSTEM BY NASR © 2026</div>
   </div>
 
   <script>
     window.onload = () => {
-      document.getElementById("loader").style.opacity = "0";
-      setTimeout(() => { document.getElementById("loader").style.display = "none"; }, 800);
+      // إجمالي وقت التحميل (4 ثوانٍ تقريباً ليشمل حركات الدخول)
+      setTimeout(() => {
+        const loader = document.getElementById("loader");
+        const welcomeContainer = document.getElementById("welcomeContainer");
+        const mainSite = document.getElementById("mainSite");
+        const card = document.getElementById("card");
+
+        // 1. مسح كلمة Welcome والنصوص تدريجياً (تأثير المسح التدرجي)
+        welcomeContainer.style.opacity = "0";
+        
+        // 2. انتظر حتى يكتمل المسح، ثم امسح الغلاف الأسود بالكامل للأعلى
+        setTimeout(() => {
+          loader.style.transform = "translateY(-100%)";
+          
+          // 3. إظهار الموقع الحقيقي بحركة دخول فخمة
+          mainSite.style.visibility = "visible";
+          
+          setTimeout(() => {
+            card.style.opacity = "1";
+            card.style.transform = "scale(1)";
+            document.body.style.overflow = "auto"; // السماح بالسكرول بعد الفتح
+          }, 800);
+        }, 1000); // انتظر ثانية واحدة بعد بدء مسح الكلمات لنسحب الغلاف
+      }, 4000); 
     }
   </script>
 </body>
